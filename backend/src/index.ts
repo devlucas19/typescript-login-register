@@ -1,8 +1,11 @@
 import express from "express"
 import cors from "cors"
+import "dotenv/config"
 
+import { errorHandler } from "./middlewares/errorHandler"
 import router from "./routes"
-import { pool } from "./database"
+import { pool } from "./database/database"
+
 
 const app = express()
 
@@ -11,7 +14,7 @@ const app = express()
 async function createTable(){
     const tableQuery = 
         `CREATE TABLE IF NOT EXISTS users(
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id CHAR(36) PRIMARY KEY,
             fullName VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL,  
             password VARCHAR(255) NOT NULL,  
@@ -41,9 +44,10 @@ async function connectionTest(){
 app.use(express.json())
 app.use(cors())
 app.use(router)
+app.use(errorHandler)
 
 
-app.listen(3000, ()=> {
+app.listen(process.env.PORT, ()=> {
     connectionTest()
     console.log("Server's running")
 })
