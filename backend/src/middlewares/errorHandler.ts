@@ -7,7 +7,6 @@ export function errorHandler(
     res: Response,
     next: NextFunction
 ) {
-    // Erro esperado (lançado por você)
     if (error instanceof AppError) {
         return res.status(error.statusCode).json({
             status: 'error',
@@ -15,7 +14,6 @@ export function errorHandler(
         });
     }
 
-    // Erro inesperado
     console.error(error);
     return res.status(500).json({
         status: 'error',

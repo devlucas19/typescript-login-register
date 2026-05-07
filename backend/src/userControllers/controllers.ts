@@ -4,6 +4,7 @@ import { AppError } from "../errors/AppError";
 import { uuidv7 } from 'uuidv7';
 import bcrypt from 'bcrypt'
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { generateToken } from "../utils/jwt";
 
 interface User extends RowDataPacket{
     id: string, 
@@ -59,8 +60,10 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
         const isMatch = await bcrypt.compare(password, user.password)
 
         if(!isMatch) throw new AppError('Invalid credentials', 401)
+        
+        const token = generateToken(user.id)
 
-        return res.status(200).json({message: "Logged in successfully"})
+        return res.status(200).json({message: "Logged in successfully", token})
 
     } catch (error) {
         next(error)
