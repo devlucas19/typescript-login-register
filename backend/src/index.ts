@@ -3,7 +3,7 @@ import cors from "cors"
 import "dotenv/config"
 
 import { errorHandler } from "./middlewares/errorHandler"
-import router from "./routes"
+import router from "./routes/routes"
 import { pool } from "./database/database"
 
 
