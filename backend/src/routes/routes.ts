@@ -1,15 +1,13 @@
 import express, {Request, Response} from "express"
-import { createUser, loginUser } from "../userControllers/controllers"
-// import { authMiddleware } from "../middlewares/authMiddleware"
+import { createUser, loginUser, getProfile } from "../userControllers/controllers"
+import { authMiddleware } from "../middlewares/authMiddleware"
 
 const router = express.Router()
 
-router.get('/', (req:Request, res: Response)=>{
-    res.json({Greeting: "Hello World"})
-})
+router.post("/signup", createUser)
 
-router.post("/register", createUser)
+router.post("/signin", loginUser)
 
-router.post("/login", loginUser)
+router.get("/profile", authMiddleware, getProfile)
 
 export default router

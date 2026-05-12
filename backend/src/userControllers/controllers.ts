@@ -70,3 +70,19 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
     }
 
 }
+
+export async function getProfile(req: Request, res: Response, next: NextFunction){
+    try {
+        const userId: string | undefined = req.userId
+
+        const [users] = await pool.query<User[]>("SELECT id, fullName, email FROM users WHERE id = ?", [userId])
+
+        if(users.length === 0) throw new AppError("User not found", 404)
+
+        const user = users[0]
+
+        return res.status(200).json(user)
+    } catch (error) {
+        next(error)
+    }
+}
