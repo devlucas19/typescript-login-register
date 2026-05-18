@@ -1,4 +1,4 @@
-# LoginRegisterTS
+# jwt-auth-fullstack
 
 A full-stack authentication system built with Node.js, Express, TypeScript, React and MySQL. Covers the full auth flow — register, login, JWT-protected routes and basic account management.
 
