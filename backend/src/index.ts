@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import "dotenv/config"
+import { globalLimit } from "./middlewares/rateLimitMiddleware"
 
 import { errorHandler } from "./middlewares/errorHandler"
 import router from "./routes/routes"
@@ -40,7 +41,7 @@ async function connectionTest(){
         console.error(error)
     }
 }
-
+app.use(globalLimit)
 app.use(express.json())
 app.use(cors())
 app.use(router)
