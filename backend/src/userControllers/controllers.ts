@@ -16,7 +16,6 @@ interface User extends RowDataPacket{
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export async function createUser(req: Request, res: Response, next: NextFunction){
-
     try {
         const {fullName, email, password } = req.body
 
@@ -82,6 +81,32 @@ export async function getProfile(req: Request, res: Response, next: NextFunction
         const user = users[0]
 
         return res.status(200).json(user)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export async function changeEmail(req: Request, res: Response, next: NextFunction) {
+    try {
+        const {newEmail} = req.body
+        const userId: string | undefined = req.userId
+
+        if(!newEmail) throw new AppError("Field new email are required", 400)
+
+        if(!emailRegex.test(newEmail)) throw new AppError("Invalid email format", 400)
+        
+
+        const [checkExistentEmail] = await pool.query<User[]>("SELECT * FROM users WHERE email = ?", [newEmail])
+
+        if(checkExistentEmail.length > 0 ){
+            console.log(checkExistentEmail)
+            throw new AppError("Email already in use", 409)
+        }
+        
+        const updateEmail = await pool.query<ResultSetHeader>("UPDATE users SET email = ? WHERE id = ?", [newEmail, userId])
+
+        return res.status(200).json({message: "email has successfully changed"})
+
     } catch (error) {
         next(error)
     }
